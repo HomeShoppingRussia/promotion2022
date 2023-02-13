@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  loto:
+    container_name: hsrloto_back
+    build:
+      context: ..
+      dockerfile: ./build/local/back/Dockerfile
+    volumes:
+      - ../:/app
+    env_file:
+      - ../.env.docker
+    ports:
+      - "8082:80"
+      - "8083:81"
+  db:
+    container_name: hsrloto_db
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=loto
+      - POSTGRES_PASSWORD=loto
+      - POSTGRES_DB=loto
+      - TZ=Europe/Moscow
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./data/data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "loto", "-U", "loto" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  frontend:
+    container_name: hsrloto_front
+    build:
+      context: ../frontend
+      dockerfile: ../build/local/front/Dockerfile
+    #image: hsr24_loto_frontend:latest
+    ports:
+      - "8182:8080"
+    volumes:
+      - ../frontend:/app
