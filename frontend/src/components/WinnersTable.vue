@@ -81,9 +81,9 @@ export default {
         const headers = {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-          'Host': 'http://192.168.1.110:8182'
+          'Host': 'http://localhost:8182'
         }
-        const response = await axios.get('http://192.168.1.110:8082/api/getDraw', headers);
+        const response = await axios.get('http://localhost:8082/api/getDraw', headers);
         this.rows = response.data.list.map(item => {
           item.surname = item.surname.substring(0, 1);
           return item;
