@@ -88,6 +88,12 @@ type Record struct {
 }
 
 func (s *Server) UploadData(ctx context.Context, in *pb.UploadDataRequest) (*pb.UploadDataResponse, error) {
+	t, _ := s.GetTicketList()
+	logger.Info.Print("Numbers of elements: " + strconv.Itoa(len(*t)))
+	if len(*t) > 0 {
+		return nil, fmt.Errorf("DB is already filled")
+	}
+	fmt.Println(t)
 	logger.Info.Print("Upload data from CSV")
 	// Open the CSV file
 	file, err := os.Open("data.csv")
