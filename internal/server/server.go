@@ -48,10 +48,15 @@ func (s *Server) GetWinners(ctx context.Context, in *pb.LotoRequest) (*pb.LotoRe
 	for i, ticket := range *t {
 		prize := make([]entity.Prize, len(*p))
 		copy(prize, *p)
-		err := s.SetPrize(prize[i].Id, ticket)
-		if err != nil {
-			return nil, err
+		if len(prize) > 120 {
+			err := s.SetPrize(prize[i].Id, ticket)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			return nil, fmt.Errorf("does not enough tickets")
 		}
+
 		participant := &pb.Participants{
 			TicketNumber: ticket.Id,
 			Name:         ticket.Name,
@@ -88,6 +93,10 @@ type Record struct {
 }
 
 func (s *Server) UploadData(ctx context.Context, in *pb.UploadDataRequest) (*pb.UploadDataResponse, error) {
+	err := s.SeedPrizeTable()
+	if err != nil {
+		return nil, err
+	}
 	t, _ := s.GetTicketList()
 	logger.Info.Print("Numbers of elements: " + strconv.Itoa(len(*t)))
 	if len(*t) > 0 {
