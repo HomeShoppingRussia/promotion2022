@@ -25,10 +25,10 @@ export default {
       const headers = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Host': 'localhost:8182'
+        'Host': 'http://192.168.1.110:8182'
       }
       try {
-        const response = await axios.get('http://localhost:8082/api/uploadData', headers);
+        const response = await axios.get('http://192.168.1.110:8082/api/uploadData', headers);
         const data = await response.json()
         if (data.message) {
           this.message = 'Data successfully loaded into the database!'
