@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"hsr/loto/internal/db"
 	"hsr/loto/internal/entity"
 	"hsr/loto/internal/utils"
@@ -50,6 +51,7 @@ func (r *TicketRepository) GetTickets() (*[]entity.Ticket, error) {
 		Query(context.Background(), "SELECT id, prize_id, name, surname, middle_name, phone, spi FROM hsrloto.tickets order by random() limit 120")
 
 	if err != nil {
+		fmt.Println("Ошибка при выборке билетов: ", err.Error())
 		return nil, err
 	}
 
@@ -58,6 +60,7 @@ func (r *TicketRepository) GetTickets() (*[]entity.Ticket, error) {
 		err := rows.Scan(&e.Id, &e.PrizeId, &e.Name, &e.Surname, &e.MiddleName, &e.Phone, &e.Spi)
 
 		if err != nil {
+			fmt.Println("Ошибка при выборке билетов: ", err.Error())
 			return nil, err
 		}
 

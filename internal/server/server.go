@@ -29,28 +29,32 @@ type Server struct {
 }
 
 func (s *Server) GetWinners(ctx context.Context, in *pb.LotoRequest) (*pb.LotoResponse, error) {
-	logger.Info.Print("Say Hello")
+	fmt.Println("GetWinners called")
 
 	//header := metadata.Pairs("Access-Control-Allow-Origin", "*", "Access-Control-Allow-Methods", "GET,POST,PATCH,UPDATE,DELETE,OPTIONS", "Access-Control-Allow-Headers", "Content-Type, X-CSRF-Token, Authorization", "Access-Control-Allow-Credentials", "true")
 	grpc.SendHeader(ctx, metadata.Pairs("Access-Control-Allow-Origin", "*"))
 
+	fmt.Println("GetTicketList calling")
 	t, err := s.GetTicketList()
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(t)
+	//fmt.Println(t)
 	p, err := s.GetPrizeList()
 	if err != nil {
+		fmt.Println("GetPrizeList error" + err.Error())
 		return nil, err
 	}
-	fmt.Println(t, p)
+	fmt.Println("ticket length: " + strconv.Itoa(len(*t)) + " prize length: " + strconv.Itoa(len(*p)))
 	var services []*pb.Participants
 	for i, ticket := range *t {
 		prize := make([]entity.Prize, len(*p))
 		copy(prize, *p)
+		fmt.Println("prize in if: " + strconv.Itoa(len(prize)))
 		if len(prize) > 120 {
 			err := s.SetPrize(prize[i].Id, ticket)
 			if err != nil {
+				fmt.Println("SetPrize error" + err.Error())
 				return nil, err
 			}
 		} else {
