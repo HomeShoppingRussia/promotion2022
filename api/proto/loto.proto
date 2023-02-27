@@ -19,6 +19,12 @@ service Loto {
       get: "/api/uploadData",
     };
   }
+
+  rpc FillPrizesTable (UploadDataRequest) returns (UploadDataResponse) {
+    option (google.api.http) = {
+      get: "/api/fillPrizesTable",
+    };
+  }
 }
 
 message LotoRequest {
@@ -42,6 +48,14 @@ message UploadDataRequest {
 }
 
 message UploadDataResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message FillPrizesTableRequest {
+}
+
+message FillPrizesTableResponse {
   bool success = 1;
   string message = 2;
 }

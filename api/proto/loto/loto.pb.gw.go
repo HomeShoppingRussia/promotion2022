@@ -67,6 +67,24 @@ func local_request_Loto_UploadData_0(ctx context.Context, marshaler runtime.Mars
 
 }
 
+func request_Loto_FillPrizesTable_0(ctx context.Context, marshaler runtime.Marshaler, client LotoClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UploadDataRequest
+	var metadata runtime.ServerMetadata
+
+	msg, err := client.FillPrizesTable(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_Loto_FillPrizesTable_0(ctx context.Context, marshaler runtime.Marshaler, server LotoServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq UploadDataRequest
+	var metadata runtime.ServerMetadata
+
+	msg, err := server.FillPrizesTable(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
 // RegisterLotoHandlerServer registers the http handlers for service Loto to "mux".
 // UnaryRPC     :call LotoServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -120,6 +138,31 @@ func RegisterLotoHandlerServer(ctx context.Context, mux *runtime.ServeMux, serve
 		}
 
 		forward_Loto_UploadData_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_Loto_FillPrizesTable_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/loto.Loto/FillPrizesTable", runtime.WithHTTPPathPattern("/api/fillPrizesTable"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_Loto_FillPrizesTable_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Loto_FillPrizesTable_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -208,6 +251,28 @@ func RegisterLotoHandlerClient(ctx context.Context, mux *runtime.ServeMux, clien
 
 	})
 
+	mux.Handle("GET", pattern_Loto_FillPrizesTable_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/loto.Loto/FillPrizesTable", runtime.WithHTTPPathPattern("/api/fillPrizesTable"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_Loto_FillPrizesTable_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_Loto_FillPrizesTable_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
@@ -215,10 +280,14 @@ var (
 	pattern_Loto_GetWinners_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "getDraw"}, ""))
 
 	pattern_Loto_UploadData_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "uploadData"}, ""))
+
+	pattern_Loto_FillPrizesTable_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "fillPrizesTable"}, ""))
 )
 
 var (
 	forward_Loto_GetWinners_0 = runtime.ForwardResponseMessage
 
 	forward_Loto_UploadData_0 = runtime.ForwardResponseMessage
+
+	forward_Loto_FillPrizesTable_0 = runtime.ForwardResponseMessage
 )

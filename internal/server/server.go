@@ -93,10 +93,6 @@ type Record struct {
 }
 
 func (s *Server) UploadData(ctx context.Context, in *pb.UploadDataRequest) (*pb.UploadDataResponse, error) {
-	err := s.SeedPrizeTable()
-	if err != nil {
-		return nil, err
-	}
 	t, _ := s.GetTicketList()
 	logger.Info.Print("Numbers of elements: " + strconv.Itoa(len(*t)))
 	if len(*t) > 0 {
@@ -175,4 +171,20 @@ func (s *Server) UploadData(ctx context.Context, in *pb.UploadDataRequest) (*pb.
 		Message: "",
 	}, nil
 
+}
+
+func (s *Server) FillPrizesTable(ctx context.Context, in *pb.UploadDataRequest) (*pb.UploadDataResponse, error) {
+	fmt.Println("FillPrizesTable started")
+	err := s.SeedPrizeTable()
+	if err != nil {
+		fmt.Println("FillPrizesTable error: " + err.Error())
+		return &pb.UploadDataResponse{
+			Success: false,
+			Message: "Table prozes is filled",
+		}, err
+	}
+	return &pb.UploadDataResponse{
+		Success: true,
+		Message: "Table prozes is filled",
+	}, nil
 }

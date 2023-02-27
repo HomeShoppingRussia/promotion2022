@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type LotoClient interface {
 	GetWinners(ctx context.Context, in *LotoRequest, opts ...grpc.CallOption) (*LotoResponse, error)
 	UploadData(ctx context.Context, in *UploadDataRequest, opts ...grpc.CallOption) (*UploadDataResponse, error)
+	FillPrizesTable(ctx context.Context, in *UploadDataRequest, opts ...grpc.CallOption) (*UploadDataResponse, error)
 }
 
 type lotoClient struct {
@@ -52,12 +53,22 @@ func (c *lotoClient) UploadData(ctx context.Context, in *UploadDataRequest, opts
 	return out, nil
 }
 
+func (c *lotoClient) FillPrizesTable(ctx context.Context, in *UploadDataRequest, opts ...grpc.CallOption) (*UploadDataResponse, error) {
+	out := new(UploadDataResponse)
+	err := c.cc.Invoke(ctx, "/loto.Loto/FillPrizesTable", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LotoServer is the server API for Loto service.
 // All implementations must embed UnimplementedLotoServer
 // for forward compatibility
 type LotoServer interface {
 	GetWinners(context.Context, *LotoRequest) (*LotoResponse, error)
 	UploadData(context.Context, *UploadDataRequest) (*UploadDataResponse, error)
+	FillPrizesTable(context.Context, *UploadDataRequest) (*UploadDataResponse, error)
 	mustEmbedUnimplementedLotoServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedLotoServer) GetWinners(context.Context, *LotoRequest) (*LotoR
 }
 func (UnimplementedLotoServer) UploadData(context.Context, *UploadDataRequest) (*UploadDataResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadData not implemented")
+}
+func (UnimplementedLotoServer) FillPrizesTable(context.Context, *UploadDataRequest) (*UploadDataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FillPrizesTable not implemented")
 }
 func (UnimplementedLotoServer) mustEmbedUnimplementedLotoServer() {}
 
@@ -120,6 +134,24 @@ func _Loto_UploadData_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Loto_FillPrizesTable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LotoServer).FillPrizesTable(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/loto.Loto/FillPrizesTable",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LotoServer).FillPrizesTable(ctx, req.(*UploadDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Loto_ServiceDesc is the grpc.ServiceDesc for Loto service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var Loto_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UploadData",
 			Handler:    _Loto_UploadData_Handler,
+		},
+		{
+			MethodName: "FillPrizesTable",
+			Handler:    _Loto_FillPrizesTable_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

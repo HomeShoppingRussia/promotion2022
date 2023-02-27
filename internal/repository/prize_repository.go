@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"hsr/loto/internal/db"
 	"hsr/loto/internal/entity"
 )
@@ -128,6 +129,7 @@ func (r *TicketRepository) SeedPrizeTable() error {
 		prizes = append(prizes, "Планшет")
 	}
 	prizes = append(prizes, "Суперприз телевизор (100 000)")
+	fmt.Println("prizes: ", prizes)
 
 	for i := 0; i <= 119; i++ {
 		rows, err := r.db.Client.
@@ -135,6 +137,7 @@ func (r *TicketRepository) SeedPrizeTable() error {
 				"INSERT INTO hsrloto.prizes (prize) VALUES ($1);", prizes[i])
 
 		if err != nil {
+			fmt.Println("err: ", err.Error())
 			return err
 		}
 

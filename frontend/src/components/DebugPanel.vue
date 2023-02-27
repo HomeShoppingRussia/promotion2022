@@ -1,7 +1,9 @@
 <template>
   <div v-if="isDebug">
-    <button v-if="isDebug" @click="fillDB">Fill DB from CSV</button>
-    <div v-if="message">{{ message }}</div>
+    <button v-if="isDebug" @click="fillTickets">Fill ticktes from CSV</button>
+    <div v-if="fillDbStatusMsg">{{ fillDbStatusMsg }}</div>]
+    <button v-if="isDebug" @click="fillPrizes">Fill prizes</button>
+    <div v-if="fillPrizesStatusMsg">{{ fillPrizesStatusMsg }}</div>
   </div>
 </template>
 
@@ -17,11 +19,12 @@ export default {
   data() {
     return {
       showModal: false,
-      message: ''
+      fillDbStatusMsg: '',
+      fillPrizesStatusMsg: '',
     }
   },
   methods: {
-    async fillDB() {
+    async fillTickets() {
       const headers = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
@@ -30,12 +33,29 @@ export default {
       try {
         const response = await axios.get('http://192.168.1.110:8082/api/uploadData', headers);
         const data = await response.json()
-        if (data.message) {
-          this.message = 'Data successfully loaded into the database!'
+        if (data.fillDbStatusMsg) {
+          this.fillDbStatusMsg = 'Data successfully loaded into the database!'
         }
       } catch (error) {
         console.error(error)
-        this.message = 'Error loading data into the database.'
+        this.fillDbStatusMsg = 'Error loading data into the database.'
+      }
+    },
+    async fillPrizes() {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Host': 'http://192.168.1.110:8182'
+      }
+      try {
+        const response = await axios.get('http://192.168.1.110:8082/api/fillPrizesTable', headers);
+        const data = await response.json()
+        if (data.fillDbStatusMsg) {
+          this.fillDbStatusMsg = 'Data successfully loaded into the database!'
+        }
+      } catch (error) {
+        console.error(error)
+        this.fillDbStatusMsg = 'Error loading data into the database.'
       }
     }
   }
