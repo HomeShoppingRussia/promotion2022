@@ -51,7 +51,7 @@ func (s *Server) GetWinners(ctx context.Context, in *pb.LotoRequest) (*pb.LotoRe
 		prize := make([]entity.Prize, len(*p))
 		copy(prize, *p)
 		fmt.Println("prize in if: " + strconv.Itoa(len(prize)))
-		if len(prize) > 120 {
+		if len(prize) >= 120 {
 			err := s.SetPrize(prize[i].Id, ticket)
 			if err != nil {
 				fmt.Println("SetPrize error" + err.Error())
