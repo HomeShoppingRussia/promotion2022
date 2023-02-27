@@ -129,4 +129,8 @@ export default {
 .table.vgt-table td {
   max-width: 194px;
 }
+.vgt-wrap {
+  position: relative;
+  max-width: 1030px;
+}
 </style>

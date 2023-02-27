@@ -128,7 +128,7 @@ func (r *TicketRepository) SeedPrizeTable() error {
 	for i := 116; i <= 118; i++ {
 		prizes = append(prizes, "Планшет")
 	}
-	prizes = append(prizes, "Суперприз телевизор (100 000)")
+	prizes = append(prizes, "Суперприз телевизор")
 	fmt.Println("prizes: ", prizes)
 
 	for i := 0; i <= 119; i++ {

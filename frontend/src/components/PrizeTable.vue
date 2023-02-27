@@ -85,6 +85,6 @@ export default {
 <style>
 .prize-table {
   width: 625px;
-  position: absolute;
+  position: fixed;
 }
 </style>
