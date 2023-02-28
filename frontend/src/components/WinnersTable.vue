@@ -1,5 +1,9 @@
 <template>
   <section>
+    <div v-if="isError" class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{errorMsg}}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <div v-if="showTables === false" class="btn-wrapper">
       <div class="btn-wrapper-inner">
         <button class="btn btn-danger w-50 h-50 mb-5" @click="getData()">Розыгрыш!</button>
@@ -29,6 +33,8 @@ export default {
     return {
       showTables: false,
       loading: false,
+      isError: false,
+      errorMsg: "",
       rows: [],
       rightItems: [],
       columns: [
@@ -81,9 +87,19 @@ export default {
         const headers = {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-          'Host': 'http://192.168.1.110:8182'
+          'Host': 'http://localhost:8182'
         }
-        const response = await axios.get('http://192.168.1.110:8082/api/getDraw', headers);
+        const response = await axios.get('http://localhost:8082/api/getDraw', headers);
+        if (response.data.status === false) {
+          this.isError = true;
+          bus.$emit('errorMsg',this.isError);
+          this.errorMsg = response.data.error;
+          bus.$emit('isError',this.errorMsg);
+          this.loading = false;
+          bus.$emit('loading',this.loading);
+          debugger;
+          return;
+        }
         this.rows = response.data.list.map(item => {
           item.surname = item.surname.substring(0, 1);
           return item;

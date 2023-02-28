@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"hsr/loto/internal/db"
 	"hsr/loto/internal/entity"
 	"hsr/loto/internal/repository"
@@ -53,4 +54,8 @@ func (s *TicketService) DeleteTicket(id int) (bool, error) {
 
 func (s *TicketService) SeedTicketTable() error {
 	return s.r.SeedTicketTable()
+}
+
+func (s *TicketService) CheckDrawStatus(ctx context.Context) (int, error) {
+	return s.r.CheckDrawStatus(ctx)
 }

@@ -31,7 +31,9 @@ message LotoRequest {
 }
 
 message LotoResponse {
-  repeated Participants list = 1;
+  bool status = 1;
+  string error = 2;
+  repeated Participants list = 3;
 }
 
 message Participants {

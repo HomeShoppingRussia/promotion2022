@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"github.com/jackc/pgx/v4"
 	"hsr/loto/internal/db"
 	"hsr/loto/internal/entity"
 	"hsr/loto/internal/utils"
@@ -197,4 +198,19 @@ func (r *TicketRepository) SeedTicketTable() error {
 	}
 
 	return nil
+}
+
+func (r *TicketRepository) CheckDrawStatus(ctx context.Context) (int, error) {
+	var count *int
+	err := r.db.Client.
+		QueryRow(ctx, "SELECT count(id) FROM hsrloto.tickets WHERE prize_id is not null").
+		Scan(&count)
+
+	if err != nil && err != pgx.ErrNoRows {
+		return -1, err
+	} else if err == pgx.ErrNoRows {
+		return 0, nil
+	}
+
+	return *count, nil
 }

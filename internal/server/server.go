@@ -39,7 +39,17 @@ func (s *Server) GetWinners(ctx context.Context, in *pb.LotoRequest) (*pb.LotoRe
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Println(t)
+	count, err := s.CheckDrawStatus(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if count != 0 {
+		return &pb.LotoResponse{
+			Status: false,
+			Error:  "Розыгрыш уже проводился. Все победители определены",
+			List:   nil,
+		}, nil
+	}
 	p, err := s.GetPrizeList()
 	if err != nil {
 		fmt.Println("GetPrizeList error" + err.Error())
@@ -73,15 +83,11 @@ func (s *Server) GetWinners(ctx context.Context, in *pb.LotoRequest) (*pb.LotoRe
 		services = append(services, participant)
 	}
 	log.Print(services)
-	/*err := s.SeedTicketTable()
-	if err != nil {
-		return nil, err
-	}
-	err = s.SeedPrizeTable()
-	if err != nil {
-		return nil, err
-	}*/
-	return &pb.LotoResponse{List: services}, nil
+	return &pb.LotoResponse{
+		Status: true,
+		Error:  "",
+		List:   services,
+	}, nil
 }
 
 // Define the struct to hold the data from csv
