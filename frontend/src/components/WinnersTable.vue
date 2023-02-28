@@ -87,9 +87,9 @@ export default {
         const headers = {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
-          'Host': 'http://localhost:8182'
+          'Host': 'http://192.168.1.110:8182'
         }
-        const response = await axios.get('http://localhost:8082/api/getDraw', headers);
+        const response = await axios.get('http://192.168.1.110:8082/api/getDraw', headers);
         if (response.data.status === false) {
           this.isError = true;
           bus.$emit('errorMsg',this.isError);
