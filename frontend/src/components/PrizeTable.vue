@@ -38,7 +38,7 @@ export default {
           photo: "/tablet.png",
         },
         {
-          prize: "Суперприз телевизор (100 000)",
+          prize: "Суперприз телевизор",
           count: 1,
           photo: "TV.png",
         },
