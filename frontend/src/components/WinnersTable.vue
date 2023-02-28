@@ -97,7 +97,6 @@ export default {
           bus.$emit('isError',this.errorMsg);
           this.loading = false;
           bus.$emit('loading',this.loading);
-          debugger;
           return;
         }
         this.rows = response.data.list.map(item => {
